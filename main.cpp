@@ -1,5 +1,6 @@
 #include <string>
 #include <chrono>
+#include <algorithm>
 #include <cstring>
 
 char buffer[128];
@@ -8,24 +9,19 @@ int bufferPos = 0;
 template <typename T>
 constexpr unsigned int toString(T num, char* str)
 {
-    unsigned int i = 0;
-
-    if (num == 0) {
-        str[i++] = '0';
-        return i;
+    if (num < 10) {
+        str[0] = num + '0';
+        return 1;
     }
 
-    unsigned int si = i;
+    unsigned int i = 0;
     while (num != 0) {
         T rem = num % 10;
         str[i++] = rem + '0';
         num /= 10;
     }
-    unsigned int ei = i - 1;
 
-    while (si != ei && si < ei) {
-        std::swap(str[si++], str[ei--]);
-    }
+    std::reverse(str, str + i);
 
     return i;
 }
